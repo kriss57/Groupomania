@@ -13,15 +13,9 @@ const { RequestError, RemarkError } = require('../error/customError')
 
 //------Récup tout les commentaires  A VOIR CI BESOINS----//
 exports.getAllRemarks = (req, res, next) => {
-    Remark.findAll({ include: { model: Article } })
-        /* Remark.findAll({
-             include: [{
-                 model: Article,
-                 include: {
-                     model: User
-                 }
-             }]
-         })*/
+    Remark.findAll({ include: { model: User } })
+
+        /*Remark.findAll({include: [{model: Article,include: {model: User}}]})*/
         .then(remarks => res.json({ data: remarks }))
         .catch(err => next(err))
 

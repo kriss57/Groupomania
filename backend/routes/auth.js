@@ -18,7 +18,7 @@ router.use((req, res, next) => {
 //--- Routage de la ressource Auth ---//
 router.post('/login', authCtrl.login)
 //--- route du refreshToken
-//router.post('/refresh', authCtrl.refresh)
+router.post('/refresh', authCtrl.refresh)
 
 
 module.exports = router

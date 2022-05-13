@@ -47,31 +47,58 @@ exports.getArticle = async (req, res, next) => {
 exports.addArticle = async (req, res, next) => {
     try {
 
-        //const { user_id, titre, contenu, image } = req.body
-        const articleInfo = {
-            image: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
-            user_id: req.body.user_id,
-            titre: req.body.titre,
-            contenu: req.body.contenu,
+        //const { user_id, titre, contenu, } = req.body
+        if (req.file) {
+            const articleInfo = {
+                image: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+                user_id: req.body.user_id,
+                titre: req.body.titre,
+                contenu: req.body.contenu,
+            }
 
+
+            // Validation des données reçues|| !req.body.titre || !req.body.contenu
+            if (!req.body.user_id) {
+                throw new RequestError('Missing parameter')
+            }
+            // Vérification si l article existe
+            let article = await Article.findOne({ where: { titre: req.body.titre }, raw: true })
+            if (article !== null) {
+                throw new ArticleError(`The article ${req.body.titre
+                    } already exists !`, 1)
+            }
+
+            // Céation de l'article // AVANT: Article.create(req.body) test: Article.create(articleInfo)
+            article = await Article.create(articleInfo)
+
+            // Réponse de l article crée
+            return res.json({ message: 'Article Created', data: article })
+        } else {
+            const articleInfo = {
+                user_id: req.body.user_id,
+                titre: req.body.titre,
+                contenu: req.body.contenu,
+                image: "",
+            }
+
+
+            // Validation des données reçues|| !req.body.titre || !req.body.contenu
+            if (!req.body.user_id) {
+                throw new RequestError('Missing parameter')
+            }
+            // Vérification si l article existe
+            let article = await Article.findOne({ where: { titre: req.body.titre }, raw: true })
+            if (article !== null) {
+                throw new ArticleError(`The article ${req.body.titre
+                    } already exists !`, 1)
+            }
+
+            // Céation de l'article // AVANT: Article.create(req.body) test: Article.create(articleInfo)
+            article = await Article.create(articleInfo)
+
+            // Réponse de l article crée
+            return res.json({ message: 'Article Created', data: article })
         }
-
-        // Validation des données reçues|| !req.body.titre || !req.body.contenu
-        if (!req.body.user_id) {
-            throw new RequestError('Missing parameter')
-        }
-        // Vérification si l article existe
-        let article = await Article.findOne({ where: { titre: req.body.titre }, raw: true })
-        if (article !== null) {
-            throw new ArticleError(`The article ${req.body.titre
-                } already exists !`, 1)
-        }
-
-        // Céation de l'article // AVANT: Article.create(req.body) test: Article.create(articleInfo)
-        article = await Article.create(articleInfo)
-
-        // Réponse de l article crée
-        return res.json({ message: 'Article Created', data: article })
     } catch (err) {
         next(err)
     }

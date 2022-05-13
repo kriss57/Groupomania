@@ -17,10 +17,11 @@ module.exports = (sequelize) => {
             type: DataTypes.INTEGER(10),
             allowNull: false
         },
-        /*user_id: {
+
+        user_id: {
             type: DataTypes.INTEGER(10),
             allowNull: false
-        },*/
+        },
         contenu: {
             type: DataTypes.TEXT,
             defaultValue: '',

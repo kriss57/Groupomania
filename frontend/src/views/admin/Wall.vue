@@ -17,8 +17,8 @@
             <p>
               <strong>{{ article.User.pseudo }}</strong> <small>a posté</small>
             </p>
-            <p>Le: {{ formatDate(article.createdAt) }}</p>
-            <p>Le: {{ dateFormat[id] }}</p>
+
+            <p>Le {{ dateFormat[id] }}</p>
           </div>
           <div class="contenu">
             <div class="title-contenu">
@@ -29,6 +29,7 @@
             <img
               class="articleImage"
               :src="article.image"
+              onerror="this.style.display='none'"
               alt="image du post"
             />
           </div>
@@ -37,15 +38,16 @@
       <div id="coment-container" class="overflow-auto">
         <div class="comment-card">
           <div v-bind:key="remark" v-for="remark in remarks">
-            <div v-if="article.id == remark.Article.id" class="form-group">
+            <div v-if="article.id == remark.article_id" class="form-group">
               <div class="comment-text">
                 <p id="comment">
-                  <strong>{{ article.User.pseudo }} : </strong
+                  <strong> {{ remark.User.pseudo }}: </strong
                   >{{ remark.contenu }}
                 </p>
                 <button
+                  @click="deleteRemark(remark.id)"
                   id="del"
-                  v-if="article.id == remark.Article.id"
+                  v-if="userActuId == remark.user_id"
                   type="submit"
                 ></button>
               </div>
@@ -91,16 +93,24 @@ export default {
       remarks: [],
       remarkData: [],
       userActuPrenom: "",
+      userActuPseudo: "",
+      userActuId: "",
       userActu: [],
+      isModo: false,
     };
   },
   methods: {
+    //-----------------------------//
+    //--Méthode toggleModale
     toggleModale: function () {
       this.revele = !this.revele;
     },
 
+    //-------------------------------//
+    //---Création d'un commentaire
     createRemark(id) {
       let remarkData = {
+        user_id: this.userActuId,
         article_id: id,
         contenu: this.remarkData.contenu,
       };
@@ -111,25 +121,23 @@ export default {
         .then((res) => console.log(res), this.$router.go())
         .catch((err) => console.log(err));
     },
-    // ca ca doit aller dans computed()
-    formatDate(dateString) {
-      const date = new Date(dateString);
-      const options = {
-        year: "numeric",
-        month: "numeric",
-        day: "numeric",
-        hour: "numeric",
-        minute: "numeric",
-        hour12: false,
-      };
-      // Then specify how you want your dates to be formatted
-      return new Intl.DateTimeFormat("default", options).format(date);
+    //-----------------------------------//
+    //---Supréssion d'un commentaire
+    deleteRemark(id) {
+      remark
+        .deleteRemark(id)
+        .then((res) => console.log(res), this.$router.go())
+        .catch((err) => console.log(err));
     },
   },
+  //---Ici les calculs avant affichage template
   computed: {
     dateFormat(id) {
-      return this.articles.map((u) =>
-        u.createdAt.slice(0, 10).split("-").reverse().join(".")
+      return this.articles.map(
+        (u) =>
+          u.createdAt.slice(0, 10).split("-").reverse().join(".") +
+          " à " +
+          u.createdAt.split("T")[1].split(".")[0]
       );
     },
   },
@@ -138,11 +146,17 @@ export default {
   },
   //change mounted a la place de created
   created() {
+    //--------------------------------------------//
+    //--Récupération des info user dans le token
     const token = localStorage.getItem("token");
     const userData = jwt_decode(token);
     console.log(userData);
     this.userActuPrenom = userData.prenom;
+    this.userActuId = userData.id;
+    this.userActuPseudo = userData.prenom;
 
+    //---------------------------------//
+    //--Récupération de tous les posts
     article
       .getAllArticles()
       .then((res) => {
@@ -153,6 +167,8 @@ export default {
       })
       .catch((err) => console.log(err));
 
+    //-----------------------------------------//
+    //---Récupérations de tout les commentaires
     remark
       .getAllRemarks()
       .then((res) => {
@@ -184,6 +200,10 @@ export default {
 #title {
   border-bottom: solid 1px #f05454;
   padding: 10px;
+  font-size: medium;
+  font-weight: bolder;
+  text-transform: uppercase;
+  color: rgb(82, 71, 227);
 }
 img {
   height: 100%;
@@ -252,6 +272,7 @@ a {
 }
 input,
 p {
+  color: black;
   width: 80%;
   height: 40px;
   padding-left: 10px;

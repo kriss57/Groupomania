@@ -26,7 +26,7 @@ const remark_router = require('./routes/remarks')
 
 const auth_router = require('./routes/auth')
 
-const refresh_router = require('./routes/refresh')
+//const refresh_router = require('./routes/refresh')
 
 //------------------------------------//
 //------Mise en place du routage-----//
@@ -39,7 +39,7 @@ app.use('/remarks', remark_router)
 
 app.use('/auth', auth_router)
 
-app.use('/refresh', refresh_router)
+//app.use('/refresh', refresh_router)
 
 //--static images folder
 app.use('/images', express.static(path.join(__dirname, 'images')));

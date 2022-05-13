@@ -3,7 +3,7 @@
 const express = require('express')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-
+const jwt_decode = require('jwt-decode')
 //const User = require('../models/user')
 const DB = require('../db.config')
 const User = DB.User
@@ -63,40 +63,29 @@ exports.login = async (req, res, next) => {
 
 let refreshTokens = [];
 
-//---------------------------------------//
-//--------- Extraction du token --------//
-const exctractBearer = authorization => {
-
-    if (typeof authorization !== 'string') {
-        return false
-    }
-
-    // isolation token
-    const matches = authorization.match(/(bearer)\s+(\S+)/i)
-
-    return matches && matches[2]
-}
 //------------------------------------------//
-//--------- Routage  refresh token -------//
+//--------- Routage  refresh token -------/
 
-exports.refresh = async (req, res, next) => {       // sur router.post(/refresh)
-
+exports.refresh = async (req, res) => {
     try {
-        // nouvelle access token avec refresh token
-        const refreshToken = req.headers.authorization && exctractBearer(req.headers.authorization)
+        const { refreshToken } = req.body;
 
-        // verification si le refresh est présent 
         if (!refreshToken) {
-            res.status(401).json({ message: 'token not found !' })
+            return res.status(401).send({
+                message: 'No refresh token provided',
+            });
         }
 
-        if (!refreshTokens.includes(refreshToken)) {
-            res.status(403).json({ message: 'Invalid refresh token !' })
-        }
-        // Vérification de la validité du refresh token
-        const user = await jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET)
+        await jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+        const user = await User.findOne(refreshToken._id)
 
-        const access_token = jwt.sign({
+        if (!user) {
+            return res.status(401).send({
+                message: 'User not found',
+            });
+        }
+
+        const token = jwt.sign({
             id: user.id,
             nom: user.nom,
             prenom: user.prenom,
@@ -104,11 +93,51 @@ exports.refresh = async (req, res, next) => {       // sur router.post(/refresh)
         }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_TIME })
 
 
-        return res.json({ access_token })
 
-    } catch (err) {
-        next(err)
+        return res.json({ access_token: token })
+
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            error,
+        });
     }
-
 }
 
+
+//------------------------------------------//
+//--------- Routage  refresh token -------//
+
+/*exports.refresh = async (req, res, next) => {
+
+    const authHeader = req.headers['authorization']
+    const token = authHeader && authHeader.split(' ')[1]
+
+    if (token == null) return res.sendStatus(401)
+
+    jwt.verify(token, process.env.JWT_REFRESH_SECRET, (err, user) => {
+        if (err) {
+            return res.sendStatus(401)
+        }
+
+        // Check en base que l'user est toujours existant/autorisé à utiliser la plateforme
+        delete user.iat;
+        delete user.exp;
+
+
+        const refreshedToken = jwt.sign({
+            id: user.id,
+            nom: user.nom,
+            prenom: user.prenom,
+            email: user.email
+        }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_TIME });
+
+        console.log(refreshedToken);
+
+        return res.json({ access_token: token })
+        /*res.send({
+            access_Token: refreshedToken,
+        });
+    });
+}*/

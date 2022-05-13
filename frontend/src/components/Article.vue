@@ -7,7 +7,8 @@
         <div v-on:click="redirect" class="btn-modale btn btn-outline-danger">
           X
         </div>
-        <h2>Modifie ton article, user: {{ articleUnique.user_id }}</h2>
+        <h2 v-if="userActuId == 1">Modifie le post, user: {{ userActuId }}</h2>
+        <h2 v-else>Tu n'est pas l'auteur de ce post !</h2>
         <p>user connecté:</p>
         <div class="container">
           <div class="form-group">
@@ -31,20 +32,20 @@
             ></textarea>
           </div>
           <button
-            v-if="articleUnique.user_id === userActuId"
+            v-if="articleUnique.user_id === userActuId || userActuId == 1"
             v-on:click.prevent="updateArticle()"
             class="btn btn-outline-success mt-3"
           >
             Modifier article
           </button>
           <button
-            v-if="articleUnique.user_id == userActuId"
+            v-if="articleUnique.user_id == userActuId || userActuId == 1"
             class="btn btn-outline-success mt-3"
           >
             Modifier image
           </button>
           <button
-            v-if="articleUnique.user_id == userActuId"
+            v-if="articleUnique.user_id == userActuId || userActuId == 1"
             v-on:click="deleteArticle"
             class="btn btn-outline-success mt-3"
           >
@@ -136,6 +137,7 @@ export default {
     },
     createRemark() {
       let remarkData = {
+        user_id: this.userActuId,
         article_id: this.articleUnique.id,
         contenu: this.remarkData.contenu,
       };

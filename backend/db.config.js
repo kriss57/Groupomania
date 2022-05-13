@@ -24,11 +24,11 @@ db.Remark = require('./models/remark')(sequelize)
 db.User.hasMany(db.Article, { foreignKey: 'user_id', onDelete: 'cascade' }) //relation user plusieur article et onDelete (si user delete total tout ces article delete)
 db.Article.belongsTo(db.User, { foreignKey: 'user_id' })
 
-db.Article.hasMany(db.Remark, { foreignKey: 'article_id' })//relation article a plusieur remark plusieur et onDelete
-db.Remark.belongsTo(db.Article, { foreignKey: 'article_id' })
+db.Article.hasMany(db.Remark, { foreignKey: 'article_id' })//relation article a plusieur remark 
+db.Remark.belongsTo(db.Article, { foreignKey: 'article_id' })// une remark appartient a un article
 
-db.User.hasMany(db.Remark, { foreignKey: 'user_id', })
-db.Remark.belongsTo(db.User, { foreignKey: 'user_id' })
+db.User.hasMany(db.Remark, { foreignKey: 'user_id', })//relation user a plusieur remark 
+db.Remark.belongsTo(db.User, { foreignKey: 'user_id' })// une remark appartient a un user
 
 
 //----------------------------------//
