@@ -68,16 +68,11 @@ let refreshTokens = [];
 
 exports.refresh = async (req, res) => {
     try {
-        const { refreshToken } = req.body;
 
-        if (!refreshToken) {
-            return res.status(401).send({
-                message: 'No refresh token provided',
-            });
-        }
 
-        await jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
-        const user = await User.findOne(refreshToken._id)
+        const user = await User.findOne(req.params.id)
+        console.log(user);
+        console.log(user.pseudo);
 
         if (!user) {
             return res.status(401).send({

@@ -33,6 +33,9 @@ const checkToken = (req, res, next) => {
             return res.status(401).json({ message: 'Bad token' })
         }
 
+        // Ajout id utilisateur pour traitement en controller
+        req.params.uid = decodedToken.id
+
         next()
     })
 }

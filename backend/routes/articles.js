@@ -19,9 +19,9 @@ router.use((req, res, next) => {
 /**************************************/
 /*** Routage de la ressource Cocktail */
 
-router.get('', articleCtrl.getAllArticles)
+router.get('', checkToken, articleCtrl.getAllArticles)
 
-router.get('/:id', articleCtrl.getArticle)
+router.get('/:id', checkToken, articleCtrl.getArticle)
 
 router.put('', checkToken, multer, articleCtrl.addArticle)
 

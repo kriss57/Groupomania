@@ -6,7 +6,7 @@ const url = "http://localhost:8888/articles"
 export default {
 
     getAllArticles() {
-        return axios.get(url)
+        return jwtInterceptor.get(url)
     },
 
     getArticle(id) {

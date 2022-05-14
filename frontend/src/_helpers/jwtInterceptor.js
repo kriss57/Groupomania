@@ -24,6 +24,59 @@ jwtInterceptor.interceptors.request.use(request => {
     return request
 })
 
+
+//let token = localStorage.getItem('token');
+//let decoded = jwt_decode(token);
+//console.log(decoded);
+//------------------------------------------------------------------------//
+//response interceptor pour rafraichir le token sans le délais de 5 minute
+jwtInterceptor.interceptors.response.use(response => {
+
+    return response
+}, error => {
+    const originalRequest = error.config;
+    console.log(originalRequest);
+    let refreshToken = localStorage.getItem("refresh");
+    let token = localStorage.getItem('token')
+    if (
+        refreshToken &&
+        error.response.status === 401 &&
+        !originalRequest._retry
+    ) {
+        console.log('coucou')
+        originalRequest._retry = true;
+
+        let ref = new Date()
+        let decoded = jwt_decode(token);
+
+
+        if (ref.getTime() < (decoded.exp * 1000) + (5 * 60000)) {
+
+
+            console.log('blabla')
+            localStorage.setItem('token', refreshToken)
+            axios
+                .post("http://localhost:8888/auth/refresh")
+                .then((res) => {
+                    if (res.status === 200) {
+                        console.log(res.data.access_token);
+                        localStorage.setItem("token", res.data.access_token);
+                        console.log("Access token refreshed!");
+
+                        //router.go()
+                        return axios(originalRequest);
+                    }
+                });
+        }
+
+
+    }
+    return Promise.reject(error);
+}
+);
+
+export default jwtInterceptor
+
 //-----Intercepteur reponse Api pour traiter l'erreur
 
 /*jwtInterceptor.interceptors.response.use(response => {
@@ -97,45 +150,38 @@ if (decodedToken.exp < new Date() / 1000) {
 });*/
 
 
-
-
-
-jwtInterceptor.interceptors.response.use(response => {
+/*jwtInterceptor.interceptors.response.use(response => {
 
     return response
 }, error => {
 
+    const originalRequest = error.config
+    console.log(originalRequest);
 
-    let token = localStorage.getItem('token')
-    let tt = new Date()
-    if (tt.getTime() < tt.getTime) {
-        if (tt.getTime() < token.exp + (5 * 60)) {
-            try {
-                let refreshToken = localStorage.getItem("refresh")
+    if (error.response.status === 401) {
+
+        try {
+            let refreshToken = localStorage.getItem("refresh")
+            console.log(refreshToken);
 
 
-                const rs = axios.post("/auth/refresh", {
-                    refreshToken
-                }
+            axios.post("http://localhost:8888/auth/refresh", refreshToken).then((res) => {
+                console.log(res).catch(err => console.log(err))
+            })
 
-                )
+            return axios(originalRequest)
 
-                const { accessToken } = rs.data
-
-                localStorage.setItem("token", accessToken)
-
-                return axios(originalConfig)
-
-            } catch (err) {
-                return Promise.reject(err)
-            }
-        } else {
-            localStorage.removeItem('token')
-            localStorage.removeItem('refresh')
+        } catch (err) {
+            return Promise.reject(err)
         }
+
+    } else {
+        localStorage.removeItem('token')
+        localStorage.removeItem('refresh')
     }
     return Promise.reject(error)
-})
+})*/
 
 
-export default jwtInterceptor
+
+
