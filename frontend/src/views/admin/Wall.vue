@@ -2,7 +2,7 @@
   <div class="container mt-5">
     <div class="modale">
       <button v-on:click="toggleModale" class="btn btn-outline-secondary">
-        Poster un article
+        Ajouter un post
       </button>
       <ModalArticle
         v-bind:revele="revele"
@@ -37,19 +37,22 @@
       </router-link>
       <div id="coment-container" class="overflow-auto">
         <div class="comment-card">
-          <div v-bind:key="remark" v-for="remark in remarks">
+          <div v-bind:key="index" v-for="(remark, index) in remarks">
             <div v-if="article.id == remark.article_id" class="form-group">
               <div class="comment-text">
                 <p id="comment">
                   <strong> {{ remark.User.pseudo }}: </strong
                   >{{ remark.contenu }}
                 </p>
+                <small>Le {{ dateFormatRemark[index] }}</small>
                 <button
                   @click="deleteRemark(remark.id)"
                   id="del"
                   v-if="userActuId == remark.user_id"
                   type="submit"
-                ></button>
+                >
+                  <i class="fa fa-trash" aria-hidden="true"></i>
+                </button>
               </div>
             </div>
           </div>
@@ -60,16 +63,17 @@
           v-model="remarkData.contenu"
           type="text"
           class="form-control"
-          placeholder="commenter"
+          placeholder="commenter..."
           aria-label="commenter"
         />
         <div class="input-group-append">
           <button
             @click="createRemark(article.id)"
             class="btn btn-outline-secondary"
+            id="add-btn"
             type="button"
           >
-            Button
+            <i class="fa fa-commenting-o" aria-hidden="true"></i>
           </button>
         </div>
       </div>
@@ -140,6 +144,19 @@ export default {
           u.createdAt.split("T")[1].split(".")[0]
       );
     },
+    //---Date création commentaire
+    dateFormatRemark(index) {
+      return this.remarks.map(
+        (u) =>
+          u.createdAt.slice(0, 10).split("-").reverse().join(".") +
+          " à " +
+          u.createdAt.split("T")[1].split(".")[0]
+      );
+    },
+    //---Inverser liste d'affichage articles
+    reverseArticle() {
+      return this.article.slice().reverse();
+    },
   },
   components: {
     ModalArticle,
@@ -191,14 +208,16 @@ export default {
   box-shadow: 10px 5px 10px rgb(10, 3, 107);
   background-color: #f05454;
   border-radius: 25px;
+  margin: auto;
   margin-bottom: 100px;
+  max-width: 70%;
 }
 .contenu {
   margin: auto;
   width: 100%;
 }
 #title {
-  border-bottom: solid 1px #f05454;
+  border-bottom: solid 2px #f05454;
   padding: 10px;
   font-size: medium;
   font-weight: bolder;
@@ -219,8 +238,24 @@ a {
 }
 .btn {
   background-color: #f05454;
-
-  color: antiquewhite;
+  color: white;
+}
+.btn:hover {
+  animation: pulsation_bouton 0.8s ease-out;
+}
+@keyframes pulsation_bouton {
+  from {
+    box-shadow: 0 0 0 -3px hsla(0, 0%, 100%, 0), 0 0 0 0 hsl(44, 66%, 57%);
+  }
+  to {
+    box-shadow: 0 0 0 10px hsla(0, 0%, 100%, 0), 0 0 0 13px hsla(0, 0%, 100%, 0);
+  }
+}
+#add-btn {
+  background-color: #e26e6e9a;
+}
+#add-btn:hover {
+  transform: scale(1.2);
 }
 .card {
   margin: auto;
@@ -233,11 +268,7 @@ a {
   padding-top: 18px;
   background-color: #f054549a;
 }
-.article-card {
-  margin: auto;
-  margin-bottom: 100px;
-  max-width: 70%;
-}
+
 #coment-container {
   background-color: white;
   overflow: scroll;
@@ -250,7 +281,6 @@ a {
 #comment {
   width: 90%;
   border-bottom: solid 2px #f05454;
-  border-radius: 10px;
   padding: 5px;
 }
 .comment-text {
@@ -260,10 +290,10 @@ a {
   margin-bottom: 20px;
 }
 #del {
-  height: 15px;
-  width: 15px;
-  border-radius: 15px;
-  margin-top: 15px;
+  border: none;
+  padding: 0 5px 0 0;
+  background-color: white;
+  color: red;
 }
 .modale {
   right: 0;
@@ -276,8 +306,29 @@ p {
   width: 80%;
   height: 40px;
   padding-left: 10px;
-  border-radius: 20px;
+
   margin-right: 10px;
   margin-bottom: 10px;
+}
+
+@media screen and (max-width: 992px) {
+  .article-card {
+    min-width: 95%;
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+  #coment-container {
+    margin: 20px 0;
+    padding-left: 5px;
+  }
+  #comment {
+    width: 98%;
+    border-bottom: none;
+    margin-bottom: 5px;
+    padding: 0;
+  }
+  .comment-text {
+    display: flex;
+  }
 }
 </style>
