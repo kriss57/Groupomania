@@ -28,6 +28,12 @@ a {
   padding-top: 30px;
   color: white;
 }
+a:hover {
+  color: black;
+  transform: scale(1.5);
+  border-bottom: 1px solid #000;
+}
+
 .bloc-nav {
   padding: 10px;
   height: 110px;

@@ -85,6 +85,7 @@
             v-model.lazy="userData.password"
             type="password"
             id="password"
+            autocomplete="on"
             class="form-control"
             />
             <small  class="form-text text-muted"
