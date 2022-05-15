@@ -36,6 +36,9 @@ DB_PORT=
 DB_NAME=
 DB_USER=
 DB_PASS=
+ici vos phrases secretes pour le token et le refreshToken
+JWT_SECRET=
+JWT_REFRESH_SECRET=
 ```
 
 **Démarrer l'API' :**
