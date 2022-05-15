@@ -155,7 +155,8 @@ export default {
     switchLogin: function () {
       this.mode = "login";
     },
-
+    //--------------------------------------------------------//
+    //--------Fonction Inscription avec validation des champs------//
     signin() {
       console.log('enter signin');
       // Vider errors
@@ -196,7 +197,8 @@ export default {
         .catch((err) => console.log(err));
       }   
     },
-
+    //--------------------------------------------------------//
+    //--------Fonction Connexion avec validation des champs------//
     login() {
        console.log('enter login');
       // Vider errors

@@ -33,9 +33,7 @@
           >
             Création article
           </button>
-          <button type="file" class="btn btn-outline-success mt-3">
-            Ajouter image
-          </button>
+
           <form id="form-img">
             <div class="form-group justify-content-center">
               <label for="File">Choisir une nouvelle photo</label>

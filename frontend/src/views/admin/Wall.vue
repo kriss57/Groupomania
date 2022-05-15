@@ -48,7 +48,7 @@
                 <button
                   @click="deleteRemark(remark.id)"
                   id="del"
-                  v-if="userActuId == remark.user_id"
+                  v-if="userActuId == remark.user_id || userActuId == 1"
                   type="submit"
                 >
                   <i class="fa fa-trash" aria-hidden="true"></i>
@@ -152,10 +152,6 @@ export default {
           " à " +
           u.createdAt.split("T")[1].split(".")[0]
       );
-    },
-    //---Inverser liste d'affichage articles
-    reverseArticle() {
-      return this.article.slice().reverse();
     },
   },
   components: {
@@ -313,7 +309,7 @@ p {
 
 @media screen and (max-width: 992px) {
   .article-card {
-    min-width: 95%;
+    min-width: 100%;
     padding-right: 10px;
     padding-left: 10px;
   }

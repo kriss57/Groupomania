@@ -25,7 +25,7 @@ a {
   justify-content: space-around;
   background-color: #e8e8e8;
   width: 80%;
-  border-radius: 50px;
+  border-radius: 25px;
   margin: auto;
   margin-top: 20px;
 }
@@ -35,5 +35,13 @@ nav {
 img {
   object-fit: cover;
   width: 250px;
+}
+@media screen and (max-width: 992px) {
+  .bloc-nav {
+    width: 100%;
+  }
+  img {
+    width: 180px;
+  }
 }
 </style>

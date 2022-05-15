@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="card border-success mb-3">
+    <div class="container mt-5">
       <PhotoUser />
       <form>
         <div class="form-group">
@@ -44,22 +44,23 @@
         </div>
       </form>
     </div>
+    <div class="btn-profil">
+      <button
+        v-on:click.prevent="updateUser()"
+        type="button"
+        class="btn btn-secondary btn-lg btn-block"
+      >
+        Modifier
+      </button>
 
-    <button
-      v-on:click.prevent="updateUser()"
-      type="button"
-      class="btn btn-secondary btn-lg btn-block"
-    >
-      Modifier
-    </button>
-
-    <button
-      v-on:click.prevent="deleteUser()"
-      type="button"
-      class="btn btn-secondary btn-lg btn-block"
-    >
-      Supprimer
-    </button>
+      <button
+        v-on:click.prevent="deleteUser()"
+        type="button"
+        class="btn btn-secondary btn-lg btn-block"
+      >
+        Supprimer
+      </button>
+    </div>
   </div>
 </template>
 
@@ -81,10 +82,12 @@ export default {
   },
 
   mounted() {
+    //---Récupération de l id utilisateur dans le token
     const token = localStorage.getItem("token");
     const userData = jwt_decode(token);
     console.log(userData.id);
     const id = userData.id;
+    //---Récupération de l'utilisateur connecté
     user
       .getUser(id)
       .then((res) => {
@@ -96,6 +99,8 @@ export default {
   },
 
   methods: {
+    //-------------------------------------//
+    //---Modification des infos utilisateur
     updateUser() {
       const id = this.userProfil.id;
       let userData = {
@@ -110,6 +115,8 @@ export default {
         .then((res) => console.log(res), router.push("/admin/profil"))
         .catch((err) => console.log(err));
     },
+    //-----------------------------------//
+    //---Suppréssion du compte utilisateur
     deleteUser() {
       let id = this.userProfil.id;
       user
@@ -124,5 +131,10 @@ export default {
 <style>
 #img-profil {
   border-radius: 50%;
+}
+.btn-profil {
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 20px;
 }
 </style>
