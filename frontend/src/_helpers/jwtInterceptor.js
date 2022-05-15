@@ -63,10 +63,14 @@ jwtInterceptor.interceptors.response.use(response => {
                         localStorage.setItem("token", res.data.access_token);
                         console.log("Access token refreshed!");
 
-                        //router.go()
+                        router.go()
                         return axios(originalRequest);
                     }
                 });
+        } else {
+            console.log('session expired plus de token');
+            tokenService.logout()
+            router.push('/')
         }
 
 
