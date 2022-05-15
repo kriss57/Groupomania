@@ -178,7 +178,7 @@ export default {
       .getAllArticles()
       .then((res) => {
         console.log(res);
-        for (const allArticles of res.data.data) {
+        for (const allArticles of res.data.data.reverse()) {
           this.articles.push(allArticles);
         }
       })
@@ -191,7 +191,7 @@ export default {
       .then((res) => {
         console.log(res);
         console.log(res.data.data);
-        for (const allRemarks of res.data.data) {
+        for (const allRemarks of res.data.data.reverse()) {
           this.remarks.push(allRemarks);
         }
       })
