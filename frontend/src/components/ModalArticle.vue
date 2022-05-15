@@ -27,12 +27,6 @@
             cols="50"
             rows="4"
           ></textarea>
-          <button
-            v-on:click.prevent="createArticle()"
-            class="btn btn-outline-success mt-3"
-          >
-            Création article
-          </button>
 
           <form id="form-img">
             <div class="form-group justify-content-center">
@@ -48,8 +42,14 @@
               />
             </div>
           </form>
+
+          <button
+            v-on:click.prevent="createArticle()"
+            class="btn btn-outline-success mt-3"
+          >
+            Création article
+          </button>
         </div>
-        <p>titre: {{ articleData.titre }}</p>
       </div>
     </div>
   </div>
@@ -86,12 +86,6 @@ export default {
       const userData = jwt_decode(token);
       console.log(userData.id);
       const id = userData.id;
-      /*let articleData = {
-        user_id: id,
-        titre: this.articleData.titre,
-        contenu: this.articleData.contenu,
-        image: this.articleData.image,
-      };*/
       const formData = new FormData();
       formData.append("image", this.articleData.image);
       formData.append("user_id", id);

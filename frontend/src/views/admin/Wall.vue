@@ -63,7 +63,7 @@
           v-model="remarkData.contenu"
           type="text"
           class="form-control"
-          placeholder="commenter..."
+          placeholder="Écrivez un commentaire..."
           aria-label="commenter"
         />
         <div class="input-group-append">
@@ -136,6 +136,7 @@ export default {
   },
   //---Ici les calculs avant affichage template
   computed: {
+    //---Date création post
     dateFormat(id) {
       return this.articles.map(
         (u) =>
@@ -157,7 +158,7 @@ export default {
   components: {
     ModalArticle,
   },
-  //change mounted a la place de created
+  //--change mounted a la place de created
   created() {
     //--------------------------------------------//
     //--Récupération des info user dans le token
@@ -212,6 +213,7 @@ export default {
   margin: auto;
   width: 100%;
 }
+
 #title {
   border-bottom: solid 2px #f05454;
   padding: 10px;
@@ -221,10 +223,9 @@ export default {
   color: rgb(82, 71, 227);
 }
 img {
-  height: 100%;
-
-  max-height: 400px;
-  width: 100%;
+  max-height: 500px;
+  display: block;
+  max-width: 100%;
   margin: auto;
   object-fit: cover;
 }
@@ -268,7 +269,7 @@ a {
 #coment-container {
   background-color: white;
   overflow: scroll;
-  max-height: 150px;
+  max-height: 100px;
   border: 1px solid rgb(238, 169, 169);
   border-radius: 15px 0 0 15px;
   margin: 20px;
