@@ -35,7 +35,7 @@
             class="form-control"
             />
         <small  class="form-text text-muted"
-          >de 5 a 25 caracteres </small
+          >de 3 a 25 caracteres </small
         >
         </div>
 
@@ -48,7 +48,7 @@
           class="form-control"
         />
         <small  class="form-text text-muted"
-          >de 5 a 25 caracteres </small
+          >de 3 a 25 caracteres </small
         >
         </div>
 
@@ -61,7 +61,7 @@
           class="form-control"
         />
         <small  class="form-text text-muted"
-          >50 caracteres maximum</small
+          >de 3 a 25 caracteres</small
         >
         </div>
 
@@ -161,16 +161,16 @@ export default {
       console.log('enter signin');
       // Vider errors
          this.errors = [];
-      // ckeck prenom superieur a 25
-      if (!this.userData.prenom || this.userData.prenom.length > 25) {
+      // ckeck prenom inferieur a 3 et superieur a 25
+      if (!this.userData.prenom || this.userData.prenom.length < 3 || this.userData.prenom.length > 25) {
         this.errors.push("Prénom non renseigné ou invalid !");
       }
-      // ckeck nom superieur a 25
-      if (!this.userData.nom || this.userData.nom.length > 25) {
+      // ckeck nom inferieur a 3 et superieur a 25
+      if (!this.userData.nom || this.userData.nom.length < 3 || this.userData.nom.length > 25) {
         this.errors.push("Nom non renseigné ou invalid !");
       }
-      // ckeck pseudo superieur a 50
-      if (!this.userData.pseudo || this.userData.pseudo.length > 50) {
+      // ckeck pseudo inferieur a 3 superieur a 25
+      if (!this.userData.pseudo || this.userData.pseudo.length < 3 || this.userData.pseudo.length > 25) {
         this.errors.push("Pseudo non renseigné ou invalid !");
       }
       // ckeck email and regex

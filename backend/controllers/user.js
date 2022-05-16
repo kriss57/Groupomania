@@ -40,10 +40,27 @@ exports.addUser = async (req, res, next) => {
     try {
         const { nom, prenom, pseudo, email, password } = req.body
 
+        // Mise en place des const regex de vérification 
+        const regPass = /^(?=.*[a-zA-Z])(?=.*[0-9]).+$/
+        const regMail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+
         // Validation des données reçues
         if (!nom || !prenom || !pseudo || !email || !password) {
             throw new RequestError('Missing parameter')
         }
+        // Validation nombre de caracteres
+        if ((nom.length < 3 || nom.length > 25) || (prenom.length < 3 || prenom.length > 25) || (pseudo.length < 3 || pseudo.length > 25)) {
+            throw new RequestError('characters must be length 3 - 25')
+        }
+        // validation avec le regex email
+        if (!regMail.test(email)) {
+            throw new RequestError('email invalid')
+        }
+        // validation avec le regex email
+        if (!regPass.test(password)) {
+            throw new RequestError('password invalid')
+        }
+
         // Vérification si l'utilisateur existe déjà
         let user = await User.findOne({ where: { email: email }, raw: true })
         if (user !== null) {

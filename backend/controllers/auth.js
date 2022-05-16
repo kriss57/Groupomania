@@ -21,6 +21,19 @@ exports.login = async (req, res, next) => {
         if (!email || !password) {
             throw new AuthenticationError('Bad email or password !', 0)
         }
+        // Mise en place des const regex de vérification 
+        const regPass = /^(?=.*[a-zA-Z])(?=.*[0-9]).+$/
+        const regMail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+        // validation avec le regex email
+        if (!regMail.test(email)) {
+            throw new AuthenticationError('email invalid')
+        }
+        // validation avec le regex email
+        if (!regPass.test(password)) {
+            throw new AuthenticationError('password invalid')
+        }
+
+
         // On vérifie si l'utilisateur existe
         let user = await User.findOne({ where: { email: email }, raw: true })
         if (user === null) {
