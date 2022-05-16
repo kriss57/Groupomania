@@ -17,7 +17,6 @@
             <p>
               <strong>{{ article.User.pseudo }}</strong> <small>a posté</small>
             </p>
-
             <p>Le {{ dateFormat[id] }}</p>
           </div>
           <div class="contenu">
@@ -48,7 +47,7 @@
                 <button
                   @click="deleteRemark(remark.id)"
                   id="del"
-                  v-if="userActuId == remark.user_id || userActuId == 1"
+                  v-if="userActuId == remark.user_id || isModo"
                   type="submit"
                 >
                   <i class="fa fa-trash" aria-hidden="true"></i>
@@ -168,6 +167,12 @@ export default {
     this.userActuPrenom = userData.prenom;
     this.userActuId = userData.id;
     this.userActuPseudo = userData.prenom;
+
+    //---------------------------------//
+    //---Condition accés modérateur
+    if (this.userActuId == 1) {
+      this.isModo = true;
+    }
 
     //---------------------------------//
     //--Récupération de tous les posts

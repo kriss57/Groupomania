@@ -1,18 +1,18 @@
 <template>
   <div class="card p-3">
-    <h2 v-if="userActuId == 1">Modérateur du site</h2>
+    <h2 v-if="isModo">Modérateur du site</h2>
     <h2 v-else>Information sur : {{ userUnique.pseudo }}</h2>
     <p>Prénom: {{ userUnique.prenom }}</p>
     <p>Nom: {{ userUnique.nom }}</p>
     <p>Pseudo: {{ userUnique.pseudo }}</p>
-    <p v-if="userActuId == 1">Email: {{ userUnique.email }}</p>
+    <p v-if="isModo">Email: {{ userUnique.email }}</p>
     <div>
       <button v-on:click.prevent="exit" type="button">
         <i class="fa fa-arrow-left" aria-hidden="true"></i>
       </button>
     </div>
     <button
-      v-if="userActuId == 1"
+      v-if="isModo"
       v-on:click.prevent="deleteUser()"
       type="button"
       class="btn btn-secondary btn-lg btn-block"
@@ -34,6 +34,7 @@ export default {
       id: this.$route.params.id,
       userUnique: [],
       userActuId: "",
+      isModo: false,
     };
   },
 
@@ -43,6 +44,13 @@ export default {
     const userData = jwt_decode(token);
     console.log(userData);
     this.userActuId = userData.id;
+
+    //---------------------------------//
+    //---Condition accés modérateur
+    if (this.userActuId == 1) {
+      this.isModo = true;
+    }
+
     //-------------------------------------------------//
     //---Récupération des info user par son id connecté
     let id = this.id;

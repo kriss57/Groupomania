@@ -7,9 +7,10 @@
         <div v-on:click="redirect" class="btn-modale btn btn-outline-danger">
           X
         </div>
-        <h2 v-if="userActuId == 1">Modifie le post, user: {{ userActuId }}</h2>
+        <h2 v-if="articleUnique.user_id === userActuId || isModo">
+          Tu peux modifier ce post !
+        </h2>
         <h2 v-else>Tu n'est pas l'auteur de ce post !</h2>
-        <p>user connecté:</p>
         <div class="container">
           <div class="form-group">
             <label for="titre">Titre du post</label>
@@ -32,24 +33,18 @@
             ></textarea>
           </div>
           <button
-            v-if="articleUnique.user_id === userActuId || userActuId == 1"
+            v-if="articleUnique.user_id === userActuId || isModo"
             v-on:click.prevent="updateArticle()"
             class="btn btn-outline-success mt-3"
           >
-            Modifier article
+            Modifier post
           </button>
           <button
-            v-if="articleUnique.user_id == userActuId || userActuId == 1"
-            class="btn btn-outline-success mt-3"
-          >
-            Modifier image
-          </button>
-          <button
-            v-if="articleUnique.user_id == userActuId || userActuId == 1"
+            v-if="articleUnique.user_id == userActuId || isModo"
             v-on:click="deleteArticle"
-            class="btn btn-outline-success mt-3"
+            class="btn btn-outline-danger mt-3"
           >
-            Supprimer article
+            Supprimer post
           </button>
           <div class="form-group">
             <label for="titre">Commentaire</label>
@@ -62,7 +57,7 @@
             />
             <button
               v-on:click.prevent="createRemark"
-              class="btn btn-outline-danger mt-3"
+              class="btn btn-outline-success mt-3"
             >
               Ajouter commentaire
             </button>
@@ -71,8 +66,8 @@
       </div>
     </div>
 
-    <div class="back-plan">
-      <p>{{ userActuId }}</p>
+    <div v-if="isModo" class="back-plan">
+      <p>Modérateur du site</p>
     </div>
   </div>
 </template>
@@ -93,6 +88,7 @@ export default {
       articleUnique: [],
       remarkData: [],
       userActuId: "",
+      isModo: false,
     };
   },
 
@@ -112,6 +108,12 @@ export default {
     const userData = jwt_decode(token);
     console.log(userData);
     this.userActuId = userData.id;
+
+    //---------------------------------//
+    //---Condition accés modérateur
+    if (this.userActuId == 1) {
+      this.isModo = true;
+    }
   },
 
   methods: {

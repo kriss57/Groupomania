@@ -37,9 +37,10 @@
           <label for="email">Ton email</label>
           <input
             v-model.lazy="userProfil.email"
-            type="mail"
+            type="email"
             id="email"
             class="form-control"
+            disabled="disabled"
           />
         </div>
       </form>

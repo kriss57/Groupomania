@@ -85,4 +85,10 @@ p {
   font-weight: 600;
   font-size: 18px;
 }
+@media screen and (max-width: 992px) {
+  .card {
+    margin: auto;
+    width: 200px;
+  }
+}
 </style>
