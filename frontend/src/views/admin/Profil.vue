@@ -95,7 +95,7 @@ export default {
       .then((res) => {
         console.log(res.data.data);
         this.userProfil = res.data.data;
-        jwtDecoded.decoded();
+        //jwtDecoded.decoded();
       })
       .catch((err) => console.log(err));
   },
@@ -121,13 +121,12 @@ export default {
     //---Suppréssion du compte utilisateur
     deleteUser() {
       let id = this.userProfil.id;
+      console.log(id);
       user
         .deleteUser(id)
-        .then(
-          (res) => console.log(res),
-          tokenService.logout(),
-          router.push("/")
-        )
+        .then((res) => {
+          console.log(res), tokenService.logout(), router.push("/");
+        })
         .catch((err) => console.log(err));
     },
   },

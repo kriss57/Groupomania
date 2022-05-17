@@ -25,7 +25,7 @@ a {
   justify-content: space-around;
   background-color: #e8e8e8;
   width: 80%;
-  border-radius: 25px;
+  border-radius: 5px;
   margin: auto;
   margin-top: 20px;
 }
