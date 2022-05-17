@@ -36,22 +36,19 @@ jwtInterceptor.interceptors.response.use(response => {
     console.log(originalRequest);
     let refreshToken = localStorage.getItem("refresh");
     let token = localStorage.getItem('token')
+    //----Verification s'il y a bien un refreshToken et erreur 401
     if (
         refreshToken &&
         error.response.status === 401 &&
         !originalRequest._retry
     ) {
-        console.log('coucou')
         originalRequest._retry = true;
 
         let ref = new Date()
         let decoded = jwt_decode(token);
-
-
+        //-----Vérification Si le token n'a pas dépasser les 5 minutes d expiration
         if (ref.getTime() < (decoded.exp * 1000) + (5 * 60000)) {
 
-
-            console.log('blabla')
             localStorage.setItem('token', refreshToken)
             axios
                 .post("http://localhost:8888/auth/refresh")

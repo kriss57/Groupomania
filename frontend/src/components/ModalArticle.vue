@@ -30,7 +30,7 @@
 
           <form id="form-img">
             <div class="form-group justify-content-center">
-              <label for="File">Choisir une nouvelle photo</label>
+              <label for="File">Choisir une image ou gif</label>
               <input
                 @change="selectFile()"
                 type="file"
@@ -76,16 +76,21 @@ export default {
   },
 
   methods: {
+    //-------------------------------------//
+    //----- Récupération de l'image ------//
     selectFile() {
       console.log(this.$refs.file.files[0]);
       this.articleData.image = this.$refs.file.files[0];
     },
 
+    //------------------------------------------//
+    //---------- Création d' un post --------//
     createArticle() {
       const token = localStorage.getItem("token");
       const userData = jwt_decode(token);
       console.log(userData.id);
       const id = userData.id;
+      //-----Envoi en infoArticle en formData pour traité l'img
       const formData = new FormData();
       formData.append("image", this.articleData.image);
       formData.append("user_id", id);

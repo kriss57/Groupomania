@@ -193,7 +193,7 @@ export default {
       };
       user
         .addUser(userData)
-        .then((res) => console.log(res), router.push("/"))
+        .then((res) =>{ console.log(res),window.alert("Inscription réussi ! Merci de vous connecter."), router.push("/")})
         .catch((err) => console.log(err));
       }   
     },

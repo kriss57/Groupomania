@@ -34,24 +34,29 @@
           </div>
         </div>
       </router-link>
-      <div id="coment-container" class="overflow-auto">
+      <div id="coment-container">
         <div class="comment-card">
           <div v-bind:key="index" v-for="(remark, index) in remarks">
             <div v-if="article.id == remark.article_id" class="form-group">
               <div class="comment-text">
-                <p id="comment">
-                  <strong> {{ remark.User.pseudo }}: </strong
-                  >{{ remark.contenu }}
-                </p>
-                <small>Le {{ dateFormatRemark[index] }}</small>
-                <button
-                  @click="deleteRemark(remark.id)"
-                  id="del"
-                  v-if="userActuId == remark.user_id || isModo"
-                  type="submit"
-                >
-                  <i class="fa fa-trash" aria-hidden="true"></i>
-                </button>
+                <div class="header-comment">
+                  <p id="comment">
+                    <strong> {{ remark.User.pseudo }}: </strong>
+                    {{ remark.contenu }}
+                  </p>
+                </div>
+
+                <div id="footer-comment">
+                  <small>Le {{ dateFormatRemark[index] }}</small>
+                  <button
+                    @click="deleteRemark(remark.id)"
+                    id="del"
+                    v-if="userActuId == remark.user_id || isModo"
+                    type="submit"
+                  >
+                    <i class="fa fa-trash" aria-hidden="true"></i>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -61,6 +66,7 @@
         <input
           v-model="remarkData.contenu"
           type="text"
+          maxlength="70"
           class="form-control"
           placeholder="Écrivez un commentaire..."
           aria-label="commenter"
@@ -217,6 +223,7 @@ export default {
 .contenu {
   margin: auto;
   width: 100%;
+  overflow-x: hidden;
 }
 
 #title {
@@ -274,19 +281,23 @@ a {
 #coment-container {
   background-color: white;
   overflow: scroll;
-  max-height: 100px;
+  max-height: 180px;
   border: 1px solid rgb(238, 169, 169);
   border-radius: 15px 0 0 15px;
   margin: 20px;
   padding-left: 20px;
+  overflow-x: hidden;
 }
 #comment {
-  width: 90%;
-  border-bottom: solid 2px #f05454;
-  padding: 5px;
+}
+#footer-comment {
+  display: flex;
+  justify-content: space-around;
 }
 .comment-text {
   display: flex;
+  flex-direction: column;
+  border-bottom: solid 2px #f05454;
 }
 .btn {
   margin-bottom: 20px;
@@ -324,7 +335,7 @@ p {
     padding-left: 5px;
   }
   #comment {
-    width: 98%;
+    width: 80%;
     border-bottom: none;
     margin-bottom: 5px;
     padding: 0;
