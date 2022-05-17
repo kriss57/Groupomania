@@ -72,6 +72,7 @@ import jwt_decode from "jwt-decode";
 import router from "@/router";
 
 import PhotoUser from "../../components/PhotoUser.vue";
+import tokenService from "../../_services/tokenService";
 
 export default {
   components: { PhotoUser },
@@ -122,7 +123,11 @@ export default {
       let id = this.userProfil.id;
       user
         .deleteUser(id)
-        .then((res) => console.log(res), router.push("/"))
+        .then(
+          (res) => console.log(res),
+          tokenService.logout(),
+          router.push("/")
+        )
         .catch((err) => console.log(err));
     },
   },
